@@ -1,0 +1,122 @@
+{
+  "uid": "minecraft-overview",
+  "title": "Minecraft İzleme",
+  "tags": ["minecraft", "kubernetes"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {"from": "now-1h", "to": "now"},
+  "panels": [
+    {
+      "id": 1,
+      "title": "Minecraft durumu",
+      "type": "stat",
+      "gridPos": {"x": 0, "y": 0, "w": 8, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "minecraft_status_healthy{job=\"minecraft\"}",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "Veri yok",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {"text": "Yanıt yok", "color": "red"},
+                "1": {"text": "Yanıt veriyor", "color": "green"}
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}
+      }
+    },
+    {
+      "id": 2,
+      "title": "Bağlı oyuncular",
+      "type": "stat",
+      "gridPos": {"x": 8, "y": 0, "w": 8, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "minecraft_status_players_online_count{job=\"minecraft\"}",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {"decimals": 0, "min": 0, "noValue": "Veri yok"},
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "none",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}
+      }
+    },
+    {
+      "id": 3,
+      "title": "Yanıt süresi — küme içinden",
+      "type": "stat",
+      "gridPos": {"x": 16, "y": 0, "w": 8, "h": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "minecraft_status_response_time_seconds{job=\"minecraft\"} * 1000",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {"unit": "ms", "decimals": 1, "noValue": "Veri yok"},
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "none",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}
+      }
+    },
+    {
+      "id": 4,
+      "title": "Oyuncu sayısı ve kapasite",
+      "type": "timeseries",
+      "gridPos": {"x": 0, "y": 5, "w": 24, "h": 9},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "minecraft_status_players_online_count{job=\"minecraft\"}",
+          "legendFormat": "Bağlı oyuncular",
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "minecraft_status_players_max_count{job=\"minecraft\"}",
+          "legendFormat": "Kapasite",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {"min": 0, "decimals": 0},
+        "overrides": []
+      },
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "multi"}
+      }
+    }
+  ]
+}

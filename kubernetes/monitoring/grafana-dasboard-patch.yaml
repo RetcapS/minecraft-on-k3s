@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  template:
+    spec:
+      containers:
+        - name: grafana
+          volumeMounts:
+            - name: dashboard-provider
+              mountPath: /etc/grafana/provisioning/dashboards
+              readOnly: true
+            - name: minecraft-dashboard
+              mountPath: /etc/grafana/minecraft-dashboards
+              readOnly: true
+      volumes:
+        - name: dashboard-provider
+          configMap:
+            name: grafana-dashboard-provider
+        - name: minecraft-dashboard
+          configMap:
+            name: grafana-minecraft-dashboard
